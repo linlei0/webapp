@@ -5,7 +5,9 @@ import App from './App'
 import router from './router'
 import VueAMap from 'vue-amap'
 import store from './store'
+import './vconsole'
 import './getHerfParams'
+
 //公共css
 import '@/style/index.scss'
 //使用按需加载，减少打包体积
