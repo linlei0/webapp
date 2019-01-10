@@ -1,0 +1,62 @@
+@import './config.scss';
+html {
+  font-size : 10px;
+  height: 100%;
+}
+@media only screen and (min-width: 401px){
+  html {
+      font-size: 12.5px !important;
+  }
+}
+@media only screen and (min-width: 428px){
+  html {
+      font-size: 13.375px !important;
+  }
+}
+@media only screen and (min-width: 481px){
+  html {
+      font-size: 15px !important; 
+  }
+}
+@media only screen and (min-width: 569px){
+  html {
+      font-size: 17.5px !important; 
+  }
+}
+@media only screen and (min-width: 641px){
+  html {
+      font-size: 20px !important; 
+  }
+}
+// header头部颜色
+
+
+*{
+  padding: 0;
+  margin: 0;
+}
+li{
+  list-style-type: none;
+}
+body{
+  height: 100%;
+  width: 100%;
+  background: $body_bg
+}
+//头部设置
+.app-header{
+  // position: fixed;
+  // top: 0;
+  // right: 0;
+  // left: 0;
+  .mint-header{
+    height: $header_height;
+    background: $header_bg;
+    .mint-header-title{
+      font-size: $header_title_size;
+    }
+  }
+}
+.margin-top{
+  margin-top:  $header_height;
+}
