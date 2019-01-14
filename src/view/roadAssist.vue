@@ -25,7 +25,8 @@
       <div class="road-content-list">
         <h2 class="list-title">备注</h2>
         <div class="road-assits-remark">
-          <mt-field placeholder="需要救护车" :attr="{ maxlength: 64 }" type="textarea" rows="4" v-model="remark"></mt-field>
+          <mt-field placeholder="备注" :attr="{ maxlength: 64 }" type="textarea" rows="4" v-model="remark"></mt-field>
+          <p class="number-title"><span>{{remark.length||0}}</span>/64</p>
         </div>
       </div>
       <div class="road-footer">
@@ -61,7 +62,9 @@ import { Indicator,Toast } from 'mint-ui';
           {name:'3小时内',type:"default",index:3},
           {name:'其他',type:"default",index:4},
         ],
-        remark:''
+        remark:'',
+        id:'',
+        //CreatedTime:''
       }
     },
     computed:{
@@ -127,7 +130,9 @@ import { Indicator,Toast } from 'mint-ui';
           spinnerType: 'fading-circle'
         })
         addRoadAssist(postData).then(({data})=>{
+          // console.log(data)
           if(data.success){
+            this.id = data.id
             Indicator.close()
             Toast({
               message: '提交成功',
@@ -135,7 +140,7 @@ import { Indicator,Toast } from 'mint-ui';
               duration: 500
             });
             setTimeout(()=>{
-              this.toAssistList()
+               this.$router.push({name:'AssistDetails',params:{id:this.id}})
             },500)
           }else{
              Toast({
@@ -202,6 +207,14 @@ import { Indicator,Toast } from 'mint-ui';
   }
   .road-assits-remark{
     margin-top: 2rem;
+    position: relative;
+    .number-title{
+      font-size: 1.2rem;
+      color: #666666;
+      position:absolute;
+      right: .5rem;
+      bottom: .5rem;
+    }
   }
   .road-footer{
     margin-top: 2rem;

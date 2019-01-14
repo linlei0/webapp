@@ -39,15 +39,15 @@ import {goback} from '@/mixins/goback'
       switchType(e){
         switch(e){
           case '0':
-          return '救援已申请';
+          return '已提交';
           case '1':
-          return '救援申请失败';
+          return '已关闭';
           case '2':
-          return '正在处理';
+          return '处理中';
           case '3':
           return '已完成';
           case '4':
-          return '已关闭';
+          return '已完成';
         }
       }
     },
@@ -63,7 +63,7 @@ import {goback} from '@/mixins/goback'
     },
     methods:{
       toAssistDetails(e){
-        this.$router.push({name:'AssistDetails',params:{id:e.Id,CreatedTime:e.CreatedTime}})
+        this.$router.push({name:'AssistDetails',params:{id:e.Id}})
       },
       getAssistList(){
         const postData = {

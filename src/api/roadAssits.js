@@ -18,6 +18,7 @@ function addRoadAssist(data) {
  }
  data.Signature = Signature
   //const  
+  console.log(data)
   return request({
     url: 'Rescue/add/',
     method:'post',

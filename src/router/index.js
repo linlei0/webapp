@@ -19,6 +19,7 @@ const routes = [{
 }]
 
 const router = new Router({
+  // mode: 'history',
   routes,
   scrollBehavior: () => ({ y: 0 }) 
 })

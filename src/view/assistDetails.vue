@@ -2,51 +2,34 @@
   <div class="assistDetails">
     <app-header :title="title"></app-header>
     <div class="assistDetails-content  margin-top">
-      <section v-if="rescuestate==0" class="pan-reach">
+      <section v-if="rescuestate==0||rescuestate==1" class="pan-reach">
         <div class="reach-list reach-top">
           <div class="reach-time">
-            <span>{{rescuestate==0?'救援已申请':'救援申请失败'}}</span>
+            <span>{{rescuestate==0?'已提交':'提交失败'}}</span>
           </div>
           <!-- <div class="waste-time">路途消耗时间<span class="waste-time-size-big">16分12秒</span></div> -->
         </div>
         <div class="reach-content ">
-          <p>单号&emsp;&emsp;<span>{{CCId}}</span></p>
+          <p v-show="CCId">单号&emsp;&emsp;<span>{{CCId}}</span></p>
           <p>提交时间<span>{{Createdtime}}</span></p>
-          <p>联系时间<span>{{ContactTime}}</span></p>
+          <p v-show="rescuestate==1">关闭时间<span>{{CompleteTime}}</span></p>
         </div>
-        <div class="reach-bottom" v-show="rescuestate==0" v-if="isEvaluate==1">
-          <mt-button size="small" @click.native="isEvaluate=2" type="primary">评价</mt-button>
-        </div>
-        <div class="reach-bottom" v-show="rescuestate==0" v-else-if="isEvaluate==2">
-          <p class="reach-evaluate">请评价</p>
-          <ul>
-            <li  v-for="(item,index) in liList"
-              :class="[item<=score?'start':'']"
-              :key="index"
-              @click="selectScore(item)"
-              ></li>
-          </ul>
-          <mt-button size="small" type="primary" @click.native="submit">提交</mt-button>
-        </div>
-        <div class="reach-bottom" v-show="rescuestate==0" v-else>
-          <p class="reach-evaluate">已评价</p>
-          <ul>
-            <li  v-for="(item,index) in liList" :class="[item<=score?'start':'']" :key="index"></li>
-          </ul>
-          
+        <div class="contact-bottom">
+          <p v-show="rescuestate==0">您的信息已提交，请等待客服联系您</p>
+          <a :href="'tel:'+ServiceTel"><img class="call" src="../assets/images/call.png" alt=""> 联系人工客服</a>
         </div>
       </section>
       
       <section v-else-if="rescuestate==2" class="pan-close">
         <div class="close-list close-top">
           <div class="close">
-            <span>正在处理</span>
+            <span>{{statedes}}</span>
           </div>
         </div>
         <div class="close-content">
-          <p>单号&emsp;&emsp;<span>{{CCId}}</span></p>
-          <p>提交时间<span>{{Createdtime}}</span></p>
-          <p>联系时间<span>{{ContactTime}}</span></p>
+          <p v-show="CCId">单号&emsp;&emsp;<span>{{CCId}}</span></p>
+          <p v-show="Createdtime">提交时间<span>{{Createdtime}}</span></p>
+          <p v-show="ContactTime">联系时间<span>{{ContactTime}}</span></p>
         </div>
         <div class="close-bottom">
          <a :href="'tel:'+ServiceTel"><img class="call" src="../assets/images/call.png" alt=""> 联系人工客服</a>
@@ -61,28 +44,47 @@
           <!-- <div class="come-time">预计到达时间<span class="come-time-size-big">16分12秒</span></div> -->
         </div>
         <div class="contact-content">
-          <p>单号&emsp;&emsp;<span>{{CCId}}</span></p>
-          <p>提交时间<span>{{Createdtime}}</span></p>
-          <p>联系时间<span>{{ContactTime}}</span></p>
-          <p>完成时间<span>{{CompleteTime}}</span></p>
+          <p v-show="CCId">单号&emsp;&emsp;<span>{{CCId}}</span></p>
+          <p v-show="Createdtime">提交时间<span>{{Createdtime}}</span></p>
+          <p v-show="ContactTime">联系时间<span>{{ContactTime}}</span></p>
+          <p v-show="CompleteTime">完成时间<span>{{CompleteTime}}</span></p>
         </div>
-        <div class="contact-bottom">
-         <a :href="'tel:'+ServiceTel"><img class="call" src="../assets/images/call.png" alt=""> 联系人工客服</a>
+        <div class="reach-bottom" v-show="rescuestate==3" v-if="isEvaluate==1">
+          <mt-button size="small" @click.native="isEvaluate=2" type="primary">评价</mt-button>
+        </div>
+        <div class="reach-bottom" v-show="rescuestate==3" v-else-if="isEvaluate==2">
+          <p class="reach-evaluate">请评价</p>
+          <ul>
+            <li  v-for="(item,index) in liList"
+              :class="[item<=score?'start':'']"
+              :key="index"
+              @click="selectScore(item)"
+              ></li>
+          </ul>
+          <mt-button size="small" type="primary" @click.native="submit">提交</mt-button>
+        </div>
+        <div class="reach-bottom" v-show="rescuestate==3" v-else>
+          <p class="reach-evaluate">已评价</p>
+          <ul>
+            <li  v-for="(item,index) in liList" :class="[item<=score?'start':'']" :key="index"></li>
+          </ul>
+          
         </div>
       </section>
 
       <section v-else-if="rescuestate==4" class="pan-submit">
         <div class="submit-list submit-top">
           <div class="submit">
-            <span>已关闭</span>
+            <span>无可用车辆</span>
           </div>
         </div>
         <div class="submit-content">
-          <p>提交时间<span>{{Createdtime}}</span></p>
-          <p>关闭时间<span>{{CompleteTime}}</span></p>
+          <p v-show="CCId">单号&emsp;&emsp;<span>{{CCId}}</span></p>
+          <p v-show="Createdtime">提交时间<span>{{Createdtime}}</span></p>
+          <p v-show="CompleteTime">关闭时间<span>{{CompleteTime}}</span></p>
         </div>
         <div class="submit-bottom">
-          <p>您的信息已提交，请等待客服联系您</p>
+          <!-- <p>您的信息已提交，请等待客服联系您</p> -->
          <a :href="'tel:'+ServiceTel"><img class="call" src="../assets/images/call.png" alt=""> 联系人工客服</a>
         </div>
       </section>
@@ -122,12 +124,13 @@ let amapManager = new AMapManager();
         CompleteTime:'',//完成时间
         Createdtime:'',//提交时间
 
-        isEvaluate:1,// 1.评价按钮 2.评价start 3.已评价
+        isEvaluate:0,// 1.评价按钮 2.评价start 3.已评价
         id:'',
         title:'救援详情',
         liList:[1,2,3,4,5],
        // 0: 救援已申请; 1: 救援申请失败; 2: 正在处理; 3: 已完成; 4: 已关闭
-       rescuestate:'',
+       rescuestate:0,
+       statedes:'',// 状态描述
         CCId:'',//工单号
         rescuecar:[],//救援车位置
         pos:[],//故障车位置
@@ -205,22 +208,23 @@ let amapManager = new AMapManager();
     },
     created(){
       this.id = this.$route.params.id
-      this.Createdtime = this.$route.params.CreatedTime
-      console.log(this.$route.params)
-
+      //this.Createdtime = this.$route.params.CreatedTime
       const postData = {
         id:this.id
       }
       getAssistDetails(postData).then(({data})=>{
         if(data.success){
           const result = data.RescueDetail
-         
+          console.log(result)
           this.ServiceTel =  result.ServiceTel //救援电话
           this.score =  result.Score //评分
           this.isEvaluate = this.score>0?3:this.isEvaluate
           this.ContactTime =  result.ContactTime // 联系时间
           this.CompleteTime =  result.CompleteTime// 完成时间,关闭时间
+          this.Createdtime = result.CreatedTime // 提交时间
           this.rescuestate = result.RescueState // 状态
+          this.statedes = result.StateDes // 描述
+          console.log(result.stateDes, this.statedes)
           this.CCId =  result.CCId // 工单号
           this.rescuecar = [result.RescuecarX,result.RescuecarY]//救援车辆位置
           this.pos = [result.PosX,result.PosY] // 车辆位置
@@ -252,6 +256,7 @@ let amapManager = new AMapManager();
             imageOffset: new AMap.Pixel(0, 0)
           })
           if(this.pos[0]!=0&&this.pos[1]!=0){
+            this.center = [this.pos[0],this.pos[1]]
             carMarker = new AMap.Marker({
               position: this.pos,
               icon: posIcon,
@@ -261,7 +266,7 @@ let amapManager = new AMapManager();
           }
           this.map.add(addMap);
           if(this.pos[0]!=0&&this.pos[1]!=0 &&this.rescuecar[0]!=0&this.rescuecar[1]!=0 ){
-            console.log(this.pos,this.rescuecar)
+            // console.log(this.pos,this.rescuecar)
             var self = this
             var driving = new AMap.Driving({
               map: self.map,
@@ -372,47 +377,26 @@ let amapManager = new AMapManager();
         @extend %content_setting;
         margin: 0 1rem;
       }
-      .reach-bottom{
-       
-        text-align: center;
-         @extend %pan-bottom-bg;
-        .reach-evaluate{
-          padding: 1rem;
-        color: #999999;
-        font-size: $assistDetails_size;
-        
-        }
-        ul{
-          display: flex;
-          display: -webkit-flex;
-          flex-direction: row;
-          justify-content:center;
-          align-items: center;
-          padding: .5rem 0 1rem 0;
-          li{
-              width: 2.5rem;
-              height: 2.5rem;
-              background: url('../assets/images/star_h.png') no-repeat;
-              background-size: contain;
-              margin: 0 .7rem;
-              &.start{
-                width: 2.5rem;
-                height: 2.5rem;
-                background: url('../assets/images/star_y.png') no-repeat;
-                background-size: contain;
-                margin: 0 .7rem;
-              }
-            }
-        }
-        .mint-button.mint-button--normal.mint-button--primary{
-          height: 3rem;
-        }
-        .mint-button{
-          border-radius: 1.5rem;
-          width: 6rem !important;
-          margin:1rem 0;
+       .contact-bottom{
+        @extend %pan-bottom-bg;
+        padding: 1rem 0;
+         text-align: center;
+         p{
+           color: #999999;
+           font-size: 1.2rem;
+         }
+        a{
+          text-decoration: none;
+          color: #999999;
+          font-size: 1.5rem;
+          .call{
+            width: 1.5rem;
+            height: 1.5rem;
+            vertical-align: middle;
+          }
         }
       }
+    
     }
     // 已关闭
     .pan-close{
@@ -470,19 +454,45 @@ let amapManager = new AMapManager();
         @extend  %content_setting;
         margin: 0 1rem;
       }
-      .contact-bottom{
-        @extend %pan-bottom-bg;
-        padding: 1rem 0;
-         text-align: center;
-        a{
-          text-decoration: none;
-          color: #999999;
-          font-size: 1.5rem;
-          .call{
-            width: 1.5rem;
-            height: 1.5rem;
-            vertical-align: middle;
-          }
+        .reach-bottom{
+       
+        text-align: center;
+         @extend %pan-bottom-bg;
+        .reach-evaluate{
+          padding: 1rem;
+        color: #999999;
+        font-size: $assistDetails_size;
+        
+        }
+        ul{
+          display: flex;
+          display: -webkit-flex;
+          flex-direction: row;
+          justify-content:center;
+          align-items: center;
+          padding: .5rem 0 1rem 0;
+          li{
+              width: 2.5rem;
+              height: 2.5rem;
+              background: url('../assets/images/star_h.png') no-repeat;
+              background-size: contain;
+              margin: 0 .7rem;
+              &.start{
+                width: 2.5rem;
+                height: 2.5rem;
+                background: url('../assets/images/star_y.png') no-repeat;
+                background-size: contain;
+                margin: 0 .7rem;
+              }
+            }
+        }
+        .mint-button.mint-button--normal.mint-button--primary{
+          height: 3rem;
+        }
+        .mint-button{
+          border-radius: 1.5rem;
+          width: 6rem !important;
+          margin:1rem 0;
         }
       }
     }

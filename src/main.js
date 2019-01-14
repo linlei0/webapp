@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import VueAMap from 'vue-amap'
 import store from './store'
+// 手机端插件开发过程中使用发布关闭
 import './vconsole'
 import './getHerfParams'
 
@@ -42,7 +43,7 @@ VueAMap.initAMapApiLoader({
     'AMap.PolyEditor', //编辑 折线多，边形
     'AMap.CircleEditor', //圆形编辑器插件
     "AMap.Geolocation", //定位控件，用来获取和展示用户主机所在的经纬度位置
-    "AMap.Driving"
+    "AMap.Driving" //路线规划插件
   ],
   // 默认高德 sdk 版本为 1.4.4
   v: '1.4.4'

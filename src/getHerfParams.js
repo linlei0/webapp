@@ -1,6 +1,7 @@
 
 import store from './store'
 const href = window.location.href
+console.log(href)
 const hrefParams = href.split('?')[1]
 if(hrefParams){
   const paramsList = hrefParams.split('&')
@@ -10,6 +11,7 @@ if(hrefParams){
     let value = element.split('=')[1]
     o[key] = value
   })
+  console.log(o)
   store.dispatch('update',o)
 } else{
   // 调试数据
