@@ -6,7 +6,7 @@ import router from './router'
 import VueAMap from 'vue-amap'
 import store from './store'
 // 手机端插件开发过程中使用发布关闭
-import './vconsole'
+// import './vconsole'
 import './getHerfParams'
 
 //公共css

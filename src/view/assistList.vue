@@ -47,7 +47,7 @@ import {goback} from '@/mixins/goback'
           case '3':
           return '已完成';
           case '4':
-          return '已完成';
+          return '已关闭';
         }
       }
     },
@@ -71,6 +71,7 @@ import {goback} from '@/mixins/goback'
        }
        getAssistList(postData).then(({data})=>{
         if(data.success){
+          console.log(data)
           this.showAgian = false
           this.assistList = data.rescueItems
         }else{

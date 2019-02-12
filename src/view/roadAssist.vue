@@ -130,7 +130,8 @@ import { Indicator,Toast } from 'mint-ui';
           spinnerType: 'fading-circle'
         })
         addRoadAssist(postData).then(({data})=>{
-          // console.log(data)
+          console.log('返回数据')
+          console.log(data)
           if(data.success){
             this.id = data.id
             Indicator.close()
@@ -143,6 +144,7 @@ import { Indicator,Toast } from 'mint-ui';
                this.$router.push({name:'AssistDetails',params:{id:this.id}})
             },500)
           }else{
+            
              Toast({
               message: data.msg,
               position:'bottom',
@@ -152,6 +154,8 @@ import { Indicator,Toast } from 'mint-ui';
           }
         })
         .catch(error=>{
+          console.log('返回数据')
+          console.log(error)
           Toast({
               message: '请求超时',
               position:'bottom',

@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <keepAlive :include="chaceList">
+    <!-- :include="chaceList" -->
+   
       <router-view/>
-    </keepAlive>
   </div>
 </template>
 

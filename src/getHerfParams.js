@@ -2,7 +2,14 @@
 import store from './store'
 const href = window.location.href
 console.log(href)
-const hrefParams = href.split('?')[1]
+//.split('#')[0]
+const hrefSplit = href.split('?')[1]
+let hrefParams = ''
+if(hrefSplit.indexOf("#")>-1){
+  hrefParams = href.split('?')[1].split('#')[0]
+}else{
+  hrefParams = hrefSplit
+}
 if(hrefParams){
   const paramsList = hrefParams.split('&')
   const o = {}

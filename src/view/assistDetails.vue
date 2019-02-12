@@ -9,9 +9,9 @@
           </div>
           <!-- <div class="waste-time">路途消耗时间<span class="waste-time-size-big">16分12秒</span></div> -->
         </div>
-        <div class="reach-content ">
-          <p v-show="CCId">单号&emsp;&emsp;<span>{{CCId}}</span></p>
-          <p>提交时间<span>{{Createdtime}}</span></p>
+        <div class="reach-content">
+          <p v-show="CCId">单号<span style="display:inline-block;width:2em;margin-left:0"></span><span>{{CCId}}</span></p>
+          <p v-show="Createdtime">提交时间<span>{{Createdtime}}</span></p>
           <p v-show="rescuestate==1">关闭时间<span>{{CompleteTime}}</span></p>
         </div>
         <div class="contact-bottom">
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="close-content">
-          <p v-show="CCId">单号&emsp;&emsp;<span>{{CCId}}</span></p>
+          <p v-show="CCId">单号<span style="display:inline-block;width:2em;margin-left:0"></span><span>{{CCId}}</span></p>
           <p v-show="Createdtime">提交时间<span>{{Createdtime}}</span></p>
           <p v-show="ContactTime">联系时间<span>{{ContactTime}}</span></p>
         </div>
@@ -44,7 +44,7 @@
           <!-- <div class="come-time">预计到达时间<span class="come-time-size-big">16分12秒</span></div> -->
         </div>
         <div class="contact-content">
-          <p v-show="CCId">单号&emsp;&emsp;<span>{{CCId}}</span></p>
+          <p v-show="CCId">单号<span style="display:inline-block;width:2em;margin-left:0"></span><span>{{CCId}}</span></p>
           <p v-show="Createdtime">提交时间<span>{{Createdtime}}</span></p>
           <p v-show="ContactTime">联系时间<span>{{ContactTime}}</span></p>
           <p v-show="CompleteTime">完成时间<span>{{CompleteTime}}</span></p>
@@ -79,7 +79,7 @@
           </div>
         </div>
         <div class="submit-content">
-          <p v-show="CCId">单号&emsp;&emsp;<span>{{CCId}}</span></p>
+          <p v-show="CCId">单号<span style="display:inline-block;width:2em;margin-left:0"></span><span>{{CCId}}</span></p>
           <p v-show="Createdtime">提交时间<span>{{Createdtime}}</span></p>
           <p v-show="CompleteTime">关闭时间<span>{{CompleteTime}}</span></p>
         </div>
@@ -124,7 +124,7 @@ let amapManager = new AMapManager();
         CompleteTime:'',//完成时间
         Createdtime:'',//提交时间
 
-        isEvaluate:0,// 1.评价按钮 2.评价start 3.已评价
+        isEvaluate:1,// 1.评价按钮 2.评价start 3.已评价
         id:'',
         title:'救援详情',
         liList:[1,2,3,4,5],
@@ -207,6 +207,20 @@ let amapManager = new AMapManager();
       }
     },
     created(){
+      
+      var driving = new AMap.Driving({
+        // 驾车路线规划策略，AMap.DrivingPolicy.LEAST_TIME是最快捷模式
+        policy: AMap.DrivingPolicy.LEAST_TIME
+      })
+      
+      var startLngLat = [116.379028, 39.865042]
+      var endLngLat = [116.427281, 39.903719]
+      
+      driving.search(startLngLat, endLngLat, function (status, result) {
+        console.log(status, result)
+        // 未出错时，result即是对应的路线规划方案
+      })
+
       this.id = this.$route.params.id
       //this.Createdtime = this.$route.params.CreatedTime
       const postData = {
@@ -214,32 +228,34 @@ let amapManager = new AMapManager();
       }
       getAssistDetails(postData).then(({data})=>{
         if(data.success){
+          //  console.log(3333333333333)
           const result = data.RescueDetail
-          console.log(result)
-          this.ServiceTel =  result.ServiceTel //救援电话
-          this.score =  result.Score //评分
-          this.isEvaluate = this.score>0?3:this.isEvaluate
-          this.ContactTime =  result.ContactTime // 联系时间
-          this.CompleteTime =  result.CompleteTime// 完成时间,关闭时间
-          this.Createdtime = result.CreatedTime // 提交时间
-          this.rescuestate = result.RescueState // 状态
-          this.statedes = result.StateDes // 描述
-          console.log(result.stateDes, this.statedes)
-          this.CCId =  result.CCId // 工单号
-          this.rescuecar = [result.RescuecarX,result.RescuecarY]//救援车辆位置
-          this.pos = [result.PosX,result.PosY] // 车辆位置
+         console.log(result)
+          this.ServiceTel =  result.ServiceTel;//救援电话
+          this.score =  result.Score; //评分
+          this.isEvaluate = this.score>0?3:this.isEvaluate;
+          this.ContactTime =  result.ContactTime; // 联系时间
+          this.CompleteTime =  result.CompleteTime;// 完成时间,关闭时间
+          this.Createdtime = result.CreatedTime; // 提交时间
+          this.rescuestate = result.RescueState; // 状态
+          this.statedes = result.StateDes; // 描述
+          this.CCId =  result.CCId; // 工单号
+          
+          this.rescuecar = [result.RescuecarX,result.RescuecarY];//救援车辆位置
+          this.pos = [result.PosX,result.PosY]; // 车辆位置
           
           let rescueIcon,rescueMarker,carMarker,posIcon,addMap = []
           rescueIcon = new AMap.Icon({
             size: new AMap.Size(100, 32),
             // 图标的取图地址
-            image: '/static/images/rescue.png',
+            image: './static/images/rescue.png',
             // 图标所用图片大小
             imageSize: new AMap.Size(30, 30),
             // 图标取图偏移量
             imageOffset: new AMap.Pixel(0, 0)
           });
           if(this.rescuecar[0]!=0&this.rescuecar[1]!=0){
+        
             rescueMarker = new AMap.Marker({
               position: this.rescuecar,
               icon: rescueIcon,
@@ -248,15 +264,15 @@ let amapManager = new AMapManager();
             addMap.push(rescueMarker)
           }
           
-
           posIcon = new AMap.Icon({
-            image: '/static/images/car.png',
+            image: './static/images/car.png',
             imageSize: new AMap.Size(30, 30),
             // 图标取图偏移量
             imageOffset: new AMap.Pixel(0, 0)
           })
           if(this.pos[0]!=0&&this.pos[1]!=0){
             this.center = [this.pos[0],this.pos[1]]
+            // [116.478935,39.997761]
             carMarker = new AMap.Marker({
               position: this.pos,
               icon: posIcon,
@@ -265,28 +281,7 @@ let amapManager = new AMapManager();
             addMap.push(carMarker)
           }
           this.map.add(addMap);
-          if(this.pos[0]!=0&&this.pos[1]!=0 &&this.rescuecar[0]!=0&this.rescuecar[1]!=0 ){
-            // console.log(this.pos,this.rescuecar)
-            var self = this
-            var driving = new AMap.Driving({
-              map: self.map,
-              extensions:'all',
-              hideMarkers:true,
-              autoFitView:true,
-              policy: AMap.DrivingPolicy.LEAST_TIME
-            })
-            driving.search(this.rescuecar, this.pos, function(status, result) {
-              if (status === 'complete') {
-                  // log.success('绘制驾车路线完成')
-              } else {
-                  Toast({
-                    message:"路线规划失败",
-                    duration: 1500,
-                    position: 'bottom'
-                  })
-              }
-            });
-          }
+
         }else{
           Toast({
             message:data.msg||'请求错误',
